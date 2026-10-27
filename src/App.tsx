@@ -6,6 +6,7 @@ const currentYear = new Date().getFullYear()
 const assetUrl = (path: string) => `${import.meta.env.BASE_URL}${path}`
 const resumeUrl = assetUrl('files/resume.pdf')
 const contactFormEndpoint = 'https://formspree.io/f/mjyyyljg'
+const navigationSections = ['about', 'work', 'skills', 'contact'] as const
 const roles = [
   'A Backend Developer',
   'A Software Engineer',
@@ -36,6 +37,7 @@ function ArrowIcon() {
 
 function App() {
   const [roleIndex, setRoleIndex] = useState(0)
+  const [activeSection, setActiveSection] = useState<typeof navigationSections[number] | null>(null)
   const [isLightMode, setIsLightMode] = useState(false)
   const [contactSubmissionStatus, setContactSubmissionStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [phoneCopyStatus, setPhoneCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle')
@@ -51,6 +53,46 @@ function App() {
   const isOverlayOpen = activePhotoProject !== null || isResearchViewerOpen || isResumeViewerOpen
   const activeScreenshots = activePhotoProject === 'discord' ? discordBotScreenshots : scheduleScreenshots
   const activeScreenshotIndex = activePhotoProject === 'discord' ? discordBotScreenshotIndex : scheduleScreenshotIndex
+
+  useEffect(() => {
+    const updateActiveSection = () => {
+      const headerBottom = document.querySelector('.site-header')?.getBoundingClientRect().bottom ?? 0
+      const headerActivationPoint = headerBottom + 32
+      let nextActiveSection: typeof navigationSections[number] | null = null
+
+      for (const sectionId of navigationSections) {
+        const section = document.getElementById(sectionId)
+        if (!section) continue
+
+        const scrollMarginTop = Number.parseFloat(window.getComputedStyle(section).scrollMarginTop) || 0
+        const activationPoint = Math.max(headerActivationPoint, scrollMarginTop)
+        if (section.getBoundingClientRect().top <= activationPoint) {
+          nextActiveSection = sectionId
+        }
+      }
+
+      setActiveSection(nextActiveSection)
+    }
+    let scrollFrame = 0
+    const handleScroll = () => {
+      if (scrollFrame) return
+
+      scrollFrame = window.requestAnimationFrame(() => {
+        scrollFrame = 0
+        updateActiveSection()
+      })
+    }
+
+    updateActiveSection()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', updateActiveSection)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', updateActiveSection)
+      if (scrollFrame) window.cancelAnimationFrame(scrollFrame)
+    }
+  }, [])
 
   const handlePhoneCopy = async () => {
     try {
@@ -227,10 +269,10 @@ function App() {
           <span>Pio Niccolo J. Caoili</span>
         </a>
         <nav aria-label="Main navigation" className="main-nav">
-          <a href="#about">About</a>
-          <a href="#work">Projects</a>
-          <a href="#skills">Skills</a>
-          <a href="#contact">Contact</a>
+          <a href="#about" aria-current={activeSection === 'about' ? 'location' : undefined}>About</a>
+          <a href="#work" aria-current={activeSection === 'work' ? 'location' : undefined}>Projects</a>
+          <a href="#skills" aria-current={activeSection === 'skills' ? 'location' : undefined}>Skills</a>
+          <a href="#contact" aria-current={activeSection === 'contact' ? 'location' : undefined}>Contact</a>
         </nav>
         <button
           className="theme-toggle"
@@ -298,7 +340,7 @@ function App() {
               <div className="editor-footer"><span><span className="status-dot" /> All systems curious</span><span>UTF-8&nbsp;&nbsp; TypeScript</span></div>
             </div>
             <div className="profile-badge" aria-label="Profile photo">
-              <span className="profile-photo-fallback" aria-hidden="true">YN</span>
+              <span className="profile-photo-fallback" aria-hidden="true">PC</span>
               <img
                 className="profile-photo"
                 src={assetUrl('profile.jpg')}

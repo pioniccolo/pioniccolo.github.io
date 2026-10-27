@@ -171,6 +171,20 @@ main section[id] {
   color: var(--accent);
 }
 
+.main-nav a[aria-current="location"] {
+  color: var(--accent);
+}
+
+.main-nav a[aria-current="location"]::before {
+  position: absolute;
+  right: 20px;
+  bottom: 0;
+  left: 20px;
+  height: 2px;
+  background: var(--accent);
+  content: "";
+}
+
 .text-link,
 .contact-socials a,
 .site-footer > a:last-child {
