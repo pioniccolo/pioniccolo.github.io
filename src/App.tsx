@@ -494,7 +494,7 @@ function App() {
                 <span className="channel-action-arrow" aria-hidden="true">↗</span>
               </button>
 
-              <a href="https://www.linkedin.com/in/pio-niccolo-caoili/" target="_blank" rel="noreferrer" className="channel-button">
+              <a href="https://ph.linkedin.com/in/pio-niccolo-caoili" target="_blank" rel="noreferrer" className="channel-button">
                 <span className="channel-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 8.5A1.56 1.56 0 1 1 6.9 5.4a1.56 1.56 0 0 1 .04 3.1ZM5.52 9.86h2.8v8.64h-2.8V9.86Zm4.67 0h2.68v1.18h.04c.37-.7 1.28-1.44 2.63-1.44 2.8 0 3.32 1.84 3.32 4.24v6.66h-2.8v-6.26c0-1.49-.03-3.42-2.08-3.42-2.09 0-2.4 1.63-2.4 3.3v6.38h-2.8V9.86Z"/></svg>
                 </span>
