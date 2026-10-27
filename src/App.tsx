@@ -61,6 +61,13 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    if (phoneCopyStatus === 'idle') return
+
+    const timeout = window.setTimeout(() => setPhoneCopyStatus('idle'), 2800)
+    return () => window.clearTimeout(timeout)
+  }, [phoneCopyStatus])
+
   const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const form = event.currentTarget
@@ -224,13 +231,6 @@ function App() {
           <a href="#work">Projects</a>
           <a href="#skills">Skills</a>
           <a href="#contact">Contact</a>
-          <button
-            type="button"
-            className="resume-tab"
-            onClick={() => setIsResumeViewerOpen(true)}
-          >
-            Resume <span aria-hidden="true">↗</span>
-          </button>
         </nav>
         <button
           className="theme-toggle"
@@ -426,23 +426,6 @@ function App() {
           </div>
         </section>
 
-        <section className="resume-section section-wrap scroll-reveal">
-          <div className="resume-symbol" aria-hidden="true">↳</div>
-          <div>
-            <h2><span>Resume</span></h2>
-            <p className="resume-note">View the full PDF first, then download it if you want a copy.</p>
-          </div>
-          <div className="resume-actions">
-            <button
-              type="button"
-              className="button button-outline"
-              onClick={() => setIsResumeViewerOpen(true)}
-            >
-              View Resume <span aria-hidden="true">↗</span>
-            </button>
-          </div>
-        </section>
-
         <section className="contact-section section-wrap scroll-reveal" id="contact">
           <h2>Contact</h2>
           <p className="contact-intro">I am open to discussing opportunities,
@@ -495,10 +478,21 @@ function App() {
                 </span>
                 <span>09772129931</span>
               </button>
-              <p className="phone-copy-feedback" aria-live="polite" role="status">
-                {phoneCopyStatus === 'copied' && 'Phone number copied to clipboard.'}
-                {phoneCopyStatus === 'error' && 'Could not copy the number. Please copy it manually.'}
-              </p>
+              <button
+                type="button"
+                className="channel-button channel-button-action"
+                aria-label="View resume"
+                onClick={() => setIsResumeViewerOpen(true)}
+              >
+                <span className="channel-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M7 3.75h7l4 4v12.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                    <path d="M14 3.75v4h4M9 12h6M9 15.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
+                </span>
+                <span>Resume</span>
+                <span className="channel-action-arrow" aria-hidden="true">↗</span>
+              </button>
 
               <a href="https://www.linkedin.com/in/pio-niccolo-caoili/" target="_blank" rel="noreferrer" className="channel-button">
                 <span className="channel-icon" aria-hidden="true">
@@ -527,6 +521,13 @@ function App() {
         <path d="m6 14 6-6 6 6M12 8v12" />
       </svg>
     </a>
+    {phoneCopyStatus !== 'idle' && (
+      <div className="copy-toast" data-theme={isLightMode ? 'light' : 'dark'} role="status" aria-live="polite">
+        {phoneCopyStatus === 'copied'
+          ? 'Phone number copied to clipboard.'
+          : 'Could not copy the number. Please copy it manually.'}
+      </div>
+    )}
     {activePhotoProject && (
       <div
         ref={overlayRef}
