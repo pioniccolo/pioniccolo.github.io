@@ -58,7 +58,7 @@ export const skills = [
   {
     number: '04',
     category: 'Tools',
-    items: ['Git', 'Github','Gitlab','VS Code','Vite', 'Microsoft Office Suite','Docker', 'Antigravity', 'Gemini', 'Ollama', 'ChatGPT'],
+    items: ['Git', 'Github','Gitlab','VS Code','Vite', 'Microsoft Office Suite','Docker', 'Antigravity', 'GitHub Copilot', 'Ollama', 'ChatGPT'],
   },
   {
     number: '05',
