@@ -5,6 +5,7 @@ export type Project = {
   category: string
   description: string
   tags: string[]
+  demoUrl?: string
 }
 
 export const projects: Project[] = [
@@ -25,6 +26,16 @@ export const projects: Project[] = [
     description:
       'A conversational AI bot for Discord, powered by the Qwen 2.5 language model through Ollama. It responds to server prompts with helpful explanations, code examples, and creative replies in a playful chatbot personality. Built-in safety filtering screens harmful requests, moderation controls give server admins more control, and persistent memory helps keep conversations in context.',
     tags: ['Qwen 2.5', 'Ollama', 'Python', 'Safety & Moderation', 'Persistent Memory'],
+  },
+  {
+    title: 'Project: RPS RPG',
+    type: 'Personal game project',
+    role: 'Game Developer',
+    category: 'GODOT · GAME DEV',
+    description:
+      'A vibecoded browser-playable role-playing game built around rock-paper-scissors. This demo features a duel between the player and a computer-controlled opponent, with a simple RPS combat with card skill system. The game is built using Godot Engine with AI assisted tools and exported to WebAssembly for browser compatibility.',
+    tags: ['Godot', 'WebAssembly', 'HTML5', 'Gemini', 'Antigravity'],
+    demoUrl: 'projects/RPS-RPG/RPS-RPG.html',
   },
 ]
 
@@ -47,7 +58,7 @@ export const skills = [
   {
     number: '04',
     category: 'Tools',
-    items: ['Git', 'Github','Gitlab','VS Code','Vite', 'Microsoft Office Suite','Docker'],
+    items: ['Git', 'Github','Gitlab','VS Code','Vite', 'Microsoft Office Suite','Docker', 'Antigravity', 'Gemini', 'Ollama', 'ChatGPT'],
   },
   {
     number: '05',

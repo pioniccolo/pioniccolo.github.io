@@ -26,6 +26,12 @@ const discordBotScreenshots = [
   { src: assetUrl('projects/discordbot2.png'), alt: 'Discord chatbot generating a C++ rock-paper-scissors example' },
   { src: assetUrl('projects/discordbot3.png'), alt: 'Discord chatbot responding to a creative writing prompt' },
 ]
+const rpsScreenshots = [
+  { src: assetUrl('projects/RPS-RPG/RPS1.png'), alt: 'Project: RPS RPG screenshot 1' },
+  { src: assetUrl('projects/RPS-RPG/RPS2.png'), alt: 'Project: RPS RPG screenshot 2' },
+  { src: assetUrl('projects/RPS-RPG/RPS3.png'), alt: 'Project: RPS RPG screenshot 3' },
+  { src: assetUrl('projects/RPS-RPG/RPS4.png'), alt: 'Project: RPS RPG screenshot 4' },
+]
 
 function ArrowIcon() {
   return (
@@ -43,7 +49,8 @@ function App() {
   const [phoneCopyStatus, setPhoneCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle')
   const [scheduleScreenshotIndex, setScheduleScreenshotIndex] = useState(0)
   const [discordBotScreenshotIndex, setDiscordBotScreenshotIndex] = useState(0)
-  const [activePhotoProject, setActivePhotoProject] = useState<'schedule' | 'discord' | null>(null)
+  const [rpsScreenshotIndex, setRpsScreenshotIndex] = useState(0)
+  const [activePhotoProject, setActivePhotoProject] = useState<'schedule' | 'discord' | 'rps' | null>(null)
   const [isResearchViewerOpen, setIsResearchViewerOpen] = useState(false)
   const [isResumeViewerOpen, setIsResumeViewerOpen] = useState(false)
   const overlayRef = useRef<HTMLDivElement>(null)
@@ -51,8 +58,16 @@ function App() {
   const researchCloseButtonRef = useRef<HTMLButtonElement>(null)
   const resumeCloseButtonRef = useRef<HTMLButtonElement>(null)
   const isOverlayOpen = activePhotoProject !== null || isResearchViewerOpen || isResumeViewerOpen
-  const activeScreenshots = activePhotoProject === 'discord' ? discordBotScreenshots : scheduleScreenshots
-  const activeScreenshotIndex = activePhotoProject === 'discord' ? discordBotScreenshotIndex : scheduleScreenshotIndex
+  const activeScreenshots = activePhotoProject === 'discord'
+    ? discordBotScreenshots
+    : activePhotoProject === 'rps'
+      ? rpsScreenshots
+      : scheduleScreenshots
+  const activeScreenshotIndex = activePhotoProject === 'discord'
+    ? discordBotScreenshotIndex
+    : activePhotoProject === 'rps'
+      ? rpsScreenshotIndex
+      : scheduleScreenshotIndex
 
   useEffect(() => {
     const updateActiveSection = () => {
@@ -179,10 +194,14 @@ function App() {
     const discordInterval = window.setInterval(() => {
       setDiscordBotScreenshotIndex((current) => (current + 1) % discordBotScreenshots.length)
     }, 10000)
+    const rpsInterval = window.setInterval(() => {
+      setRpsScreenshotIndex((current) => (current + 1) % rpsScreenshots.length)
+    }, 10000)
 
     return () => {
       window.clearInterval(scheduleInterval)
       window.clearInterval(discordInterval)
+      window.clearInterval(rpsInterval)
     }
   }, [isOverlayOpen])
 
@@ -211,12 +230,16 @@ function App() {
       } else if (activePhotoProject && !isResearchViewerOpen && event.key === 'ArrowLeft') {
         if (activePhotoProject === 'discord') {
           setDiscordBotScreenshotIndex((current) => (current - 1 + discordBotScreenshots.length) % discordBotScreenshots.length)
+        } else if (activePhotoProject === 'rps') {
+          setRpsScreenshotIndex((current) => (current - 1 + rpsScreenshots.length) % rpsScreenshots.length)
         } else {
           setScheduleScreenshotIndex((current) => (current - 1 + scheduleScreenshots.length) % scheduleScreenshots.length)
         }
       } else if (activePhotoProject && !isResearchViewerOpen && event.key === 'ArrowRight') {
         if (activePhotoProject === 'discord') {
           setDiscordBotScreenshotIndex((current) => (current + 1) % discordBotScreenshots.length)
+        } else if (activePhotoProject === 'rps') {
+          setRpsScreenshotIndex((current) => (current + 1) % rpsScreenshots.length)
         } else {
           setScheduleScreenshotIndex((current) => (current + 1) % scheduleScreenshots.length)
         }
@@ -371,7 +394,7 @@ function App() {
             <div>
               <h2>Projects</h2>
             </div>
-            <p className="section-intro">A couple of things I’ve designed, built, and learned from along the way.</p>
+            <p className="section-intro">A few things I’ve designed, built, and learned from along the way.</p>
           </div>
           <div className="project-grid">
             {projects.map((project, index) => {
@@ -383,6 +406,46 @@ function App() {
               return (
               <article className={`project-card project-card-${index + 1} scroll-reveal`} key={project.title}>
                 <div className="project-visual">
+                  {project.demoUrl ? (
+                    <div className="game-project-visual">
+                      <span className="schedule-category">{project.category}</span>
+                      <span className="schedule-count" aria-live="polite">
+                        {rpsScreenshotIndex + 1} / {rpsScreenshots.length}
+                      </span>
+                      <button
+                        type="button"
+                        className="schedule-image game-project-image"
+                        aria-label={`Enlarge image: ${rpsScreenshots[rpsScreenshotIndex].alt}`}
+                        onClick={() => setActivePhotoProject('rps')}
+                      >
+                        <img
+                          key={rpsScreenshots[rpsScreenshotIndex].src}
+                          src={rpsScreenshots[rpsScreenshotIndex].src}
+                          alt={rpsScreenshots[rpsScreenshotIndex].alt}
+                        />
+                      </button>
+                      <button
+                        type="button"
+                        className="schedule-arrow schedule-arrow-previous"
+                        aria-label="Previous RPS RPG screenshot"
+                        onClick={() => setRpsScreenshotIndex((current) => (current - 1 + rpsScreenshots.length) % rpsScreenshots.length)}
+                      >
+                        <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+                          <path d="m12.5 4.5-5.5 5.5 5.5 5.5" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="schedule-arrow schedule-arrow-next"
+                        aria-label="Next RPS RPG screenshot"
+                        onClick={() => setRpsScreenshotIndex((current) => (current + 1) % rpsScreenshots.length)}
+                      >
+                        <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+                          <path d="m7.5 4.5 5.5 5.5-5.5 5.5" />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : (
                   <div className={`schedule-gallery${isScheduleProject ? '' : ' discord-gallery'}`}>
                     <div className="schedule-category">{project.category}</div>
                     <span className="schedule-count" aria-live="polite">
@@ -421,6 +484,7 @@ function App() {
                       </svg>
                     </button>
                   </div>
+                  )}
                   {!isScheduleProject && <span className="project-number">0{index + 1}</span>}
                 </div>
                 <div className="project-details">
@@ -434,7 +498,17 @@ function App() {
                   <p>{project.description}</p>
                   <div className="project-meta-row">
                     <div className="tag-list">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
-                    {index === 0 && (
+                    {project.demoUrl && (
+                      <a
+                        className="research-link"
+                        href={assetUrl(project.demoUrl)}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Play the demo <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                    {isScheduleProject && (
                       <button
                         type="button"
                         className="research-link"
@@ -577,48 +651,20 @@ function App() {
         data-theme={isLightMode ? 'light' : 'dark'}
         role="dialog"
         aria-modal="true"
-        aria-label={`${activePhotoProject === 'discord' ? 'AI Companion Discord Bot' : 'Class Scheduling System'} screenshot`}
+        aria-label={`${activePhotoProject === 'discord'
+          ? 'AI Companion Discord Bot'
+          : activePhotoProject === 'rps'
+            ? 'Project: RPS RPG'
+            : 'Class Scheduling System'} screenshot`}
         onClick={() => setActivePhotoProject(null)}
       >
         <div className="photo-lightbox-panel" onClick={(event) => event.stopPropagation()}>
           <div className="photo-lightbox-header">
             <span>{activeScreenshots[activeScreenshotIndex].alt}</span>
             <div className="photo-lightbox-actions">
-              <button
-                type="button"
-                className="photo-lightbox-arrow"
-                aria-label="Previous screenshot"
-                onClick={() => {
-                  if (activePhotoProject === 'discord') {
-                    setDiscordBotScreenshotIndex((current) => (current - 1 + discordBotScreenshots.length) % discordBotScreenshots.length)
-                  } else {
-                    setScheduleScreenshotIndex((current) => (current - 1 + scheduleScreenshots.length) % scheduleScreenshots.length)
-                  }
-                }}
-              >
-                <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
-                  <path d="m12.5 4.5-5.5 5.5 5.5 5.5" />
-                </svg>
-              </button>
               <span className="photo-lightbox-count" aria-live="polite">
                 {activeScreenshotIndex + 1} / {activeScreenshots.length}
               </span>
-              <button
-                type="button"
-                className="photo-lightbox-arrow"
-                aria-label="Next screenshot"
-                onClick={() => {
-                  if (activePhotoProject === 'discord') {
-                    setDiscordBotScreenshotIndex((current) => (current + 1) % discordBotScreenshots.length)
-                  } else {
-                    setScheduleScreenshotIndex((current) => (current + 1) % scheduleScreenshots.length)
-                  }
-                }}
-              >
-                <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
-                  <path d="m7.5 4.5 5.5 5.5-5.5 5.5" />
-                </svg>
-              </button>
               <button
                 ref={lightboxCloseButtonRef}
                 type="button"
@@ -632,11 +678,47 @@ function App() {
               </button>
             </div>
           </div>
+          <button
+            type="button"
+            className="photo-lightbox-arrow photo-lightbox-arrow-previous"
+            aria-label="Previous screenshot"
+            onClick={() => {
+              if (activePhotoProject === 'discord') {
+                setDiscordBotScreenshotIndex((current) => (current - 1 + discordBotScreenshots.length) % discordBotScreenshots.length)
+              } else if (activePhotoProject === 'rps') {
+                setRpsScreenshotIndex((current) => (current - 1 + rpsScreenshots.length) % rpsScreenshots.length)
+              } else {
+                setScheduleScreenshotIndex((current) => (current - 1 + scheduleScreenshots.length) % scheduleScreenshots.length)
+              }
+            }}
+          >
+            <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+              <path d="m12.5 4.5-5.5 5.5 5.5 5.5" />
+            </svg>
+          </button>
           <img
             className="schedule-lightbox-image"
             src={activeScreenshots[activeScreenshotIndex].src}
             alt={activeScreenshots[activeScreenshotIndex].alt}
           />
+          <button
+            type="button"
+            className="photo-lightbox-arrow photo-lightbox-arrow-next"
+            aria-label="Next screenshot"
+            onClick={() => {
+              if (activePhotoProject === 'discord') {
+                setDiscordBotScreenshotIndex((current) => (current + 1) % discordBotScreenshots.length)
+              } else if (activePhotoProject === 'rps') {
+                setRpsScreenshotIndex((current) => (current + 1) % rpsScreenshots.length)
+              } else {
+                setScheduleScreenshotIndex((current) => (current + 1) % scheduleScreenshots.length)
+              }
+            }}
+          >
+            <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+              <path d="m7.5 4.5 5.5 5.5-5.5 5.5" />
+            </svg>
+          </button>
         </div>
       </div>
     )}

@@ -664,6 +664,12 @@ main section[id] {
   gap: 22px;
 }
 
+.project-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc((100% - 22px) / 2);
+}
+
 .project-card {
   overflow: hidden;
   border: 1px solid #292c32;
@@ -693,6 +699,37 @@ main section[id] {
     radial-gradient(ellipse at 50% 100%, rgb(150 57 92 / 18%), transparent 58%),
     radial-gradient(ellipse at 50% 0%, rgb(101 87 156 / 14%), transparent 60%),
     #15151b;
+}
+
+.game-project-visual {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgb(127 161 78 / 22%), transparent 64%),
+    radial-gradient(ellipse at 50% 0%, rgb(101 87 156 / 16%), transparent 60%),
+    #15181b;
+}
+
+.site-shell[data-theme="light"] .game-project-visual {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgb(78 110 153 / 14%), transparent 64%),
+    radial-gradient(ellipse at 50% 0%, rgb(101 87 156 / 8%), transparent 60%),
+    #edf1f6;
+}
+
+.game-project-title {
+  display: flex;
+  gap: 12px;
+  color: #e5e8dc;
+  font-family: var(--mono);
+  font-size: clamp(11px, 1.4vw, 15px);
+  letter-spacing: .13em;
 }
 
 .project-visual-label {
@@ -756,12 +793,21 @@ main section[id] {
   cursor: zoom-in;
 }
 
+.game-project-image {
+  inset: 36px 42px 32px;
+}
+
 .schedule-image img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   animation: schedule-image-enter .65s ease both;
+}
+
+.game-project-image img {
+  object-fit: cover;
+  object-position: center 65%;
 }
 
 .discord-gallery .schedule-image {
@@ -1013,12 +1059,14 @@ main section[id] {
 }
 
 .photo-lightbox-panel {
+  position: relative;
   display: flex;
-  width: min(94vw, 1400px);
-  height: min(90vh, 1000px);
+  width: fit-content;
+  max-width: 92vw;
+  max-height: 90vh;
   min-height: 0;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid rgb(255 255 255 / 18%);
   border-radius: 10px;
   background: #171a1e;
@@ -1028,6 +1076,7 @@ main section[id] {
 
 .photo-lightbox-header {
   display: flex;
+  width: 100%;
   min-height: 48px;
   flex: 0 0 48px;
   align-items: center;
@@ -1053,16 +1102,28 @@ main section[id] {
 }
 
 .photo-lightbox-arrow {
+  position: absolute;
+  z-index: 1;
+  top: calc(50% + 24px);
   display: grid;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   place-items: center;
   border: 1px solid #363a40;
   border-radius: 6px;
   background: #1b1e23;
   color: #b9bdc5;
   cursor: pointer;
+  transform: translateY(-50%);
   transition: color .2s ease, border-color .2s ease, background-color .2s ease;
+}
+
+.photo-lightbox-arrow-previous {
+  left: -54px;
+}
+
+.photo-lightbox-arrow-next {
+  right: -54px;
 }
 
 .photo-lightbox-arrow:hover {
@@ -1128,17 +1189,24 @@ main section[id] {
 
 .schedule-lightbox-image {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
+  max-width: min(92vw, 1400px);
+  max-height: calc(90vh - 50px);
   min-height: 0;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   object-fit: contain;
   background: #0d0e11;
+  border-radius: 0 0 9px 9px;
 }
 
 .schedule-lightbox[data-theme="light"] .photo-lightbox-panel {
   border-color: #d5dbe5;
   background: #f5f6f2;
+}
+
+.schedule-lightbox[data-theme="light"] .schedule-lightbox-image {
+  background: #e8ebf0;
 }
 
 .schedule-lightbox[data-theme="light"] .photo-lightbox-header {
@@ -1764,6 +1832,14 @@ main section[id] {
 }
 
 @media (max-width: 800px) {
+  .photo-lightbox-arrow-previous {
+    left: 8px;
+  }
+
+  .photo-lightbox-arrow-next {
+    right: 8px;
+  }
+
   .section-wrap {
     width: min(100% - 40px, 600px);
   }
@@ -1852,6 +1928,14 @@ main section[id] {
 }
 
 @media (max-width: 560px) {
+  .photo-lightbox-arrow-previous {
+    left: 8px;
+  }
+
+  .photo-lightbox-arrow-next {
+    right: 8px;
+  }
+
   .section-wrap {
     width: calc(100% - 36px);
   }
