@@ -2068,6 +2068,10 @@ main section[id] {
     gap: 16px;
   }
 
+  .project-card:last-child:nth-child(odd) {
+    width: 100%;
+  }
+
   .project-visual {
     height: 210px;
   }
